@@ -8,7 +8,7 @@ PLAT= none
 
 # XXX EMSCRIPTEN - comment out several lines here, to pick them up from the environment
 #CC= gcc
-CFLAGS= -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
+CFLAGS= -O3 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
 #LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
@@ -49,10 +49,11 @@ LUAC_T=	luac
 LUAC_O=	luac.o
 
 ifdef EMSCRIPTEN
-  EMLUA_SHELL_T = emlua_shell.js
-  EMLUA_SHELL_ARGS = -O2 -s EXPORTED_FUNCTIONS="['_luaL_newstate', '_luaL_openlibs', '_lua_createtable', '_lua_getglobal', '_lua_gettop', '_lua_iscfunction', '_lua_next', '_lua_pcallk', '_lua_pushboolean', '_lua_pushcclosure', '_lua_pushnil', '_lua_pushnumber', '_lua_pushstring', '_lua_pushvalue', '_lua_rawget', '_lua_rawlen', '_lua_rawset', '_lua_setglobal', '_lua_setmetatable', '_lua_settop', '_lua_toboolean', '_lua_tolstring', '_lua_tonumberx', '_lua_topointer', '_lua_type', '_lua_typename', '_luaL_loadbufferx']" \
+  EMLUA_SHELL_T = lua.vm.js
+  EMLUA_SHELL_ARGS = -O3 --closure 1 -s EXPORTED_FUNCTIONS="['_luaL_newstate', '_luaL_openlibs', '_lua_createtable', '_lua_getglobal', '_lua_gettop', '_lua_iscfunction', '_lua_next', '_lua_pcallk', '_lua_pushboolean', '_lua_pushcclosure', '_lua_pushnil', '_lua_pushnumber', '_lua_pushstring', '_lua_pushvalue', '_lua_rawget', '_lua_rawlen', '_lua_rawset', '_lua_setglobal', '_lua_setmetatable', '_lua_settop', '_lua_toboolean', '_lua_tolstring', '_lua_tonumberx', '_lua_topointer', '_lua_type', '_lua_typename', '_luaL_loadbufferx']" \
    -s TOTAL_MEMORY=134217728 -s ALLOW_MEMORY_GROWTH=0 -s ASM_JS=1 -s RESERVED_FUNCTION_POINTERS=2 -s OPTIMIZE=1 \
-   -s CLOSURE_ANNOTATIONS=1 -s CORRECT_SIGNS=1 -s CORRECT_OVERFLOWS=1 -s WARN_ON_UNDEFINED_SYMBOLS=1 -s INVOKE_RUN=0 -s AUTORUN=0
+   -s CLOSURE_ANNOTATIONS=1 -s CORRECT_SIGNS=1 -s CORRECT_OVERFLOWS=1 -s WARN_ON_UNDEFINED_SYMBOLS=1 -s INVOKE_RUN=0 -s AUTORUN=0 \
+   --post-js ../API.js
 #   -s TOTAL_MEMORY=256748364 -s ALLOW_MEMORY_GROWTH=1 -s ASM_JS=0 -s RESERVED_FUNCTION_POINTERS=8 -s TOTAL_STACK=8485760
 else
   EMLUA_SHELL_T = emlua_shell
@@ -66,13 +67,7 @@ ALL_A= $(LUA_A)
 # Targets start here.
 default: $(PLAT)
 
-ifdef EMSCRIPTEN
-LUA_JS=	lua.vm.js
-lua.vm.js:	$(EMLUA_SHELL_T)
-	cat $(EMLUA_SHELL_T) ../API.js > $@
-endif
-
-all:	$(ALL_T) $(LUA_JS)
+all:	$(ALL_T)
 
 o:	$(ALL_O)
 
