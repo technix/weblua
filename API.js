@@ -8,6 +8,7 @@
 // ============================================================================
 
 this['Lua'] = {
+    isRun: false,
     isInitialized: false,
     state: null,
     tmp_id: 0,
@@ -21,7 +22,12 @@ this['Lua'] = {
         this.default_source_name = source_name || this.default_source_name;
         this.stdout = stdout || this.stdout;
         this.stderr = stderr || this.stderr;
-        run();
+
+        if (!this.isRun) {
+                run();
+                isRun = true;
+        }
+
         this.state = _luaL_newstate();
         _luaL_openlibs(this.state);
         for (var key in this.preallocated_strings) {
