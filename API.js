@@ -382,6 +382,7 @@ this['Lua'] = {
 }
 // Public functions
 this['Lua']['initialize'] = this['Lua'].initialize;
+this['Lua']['destroy'] = this['Lua'].destroy;
 this['Lua']['stdout'] = this['Lua'].stdout;
 this['Lua']['stderr'] = this['Lua'].stderr;
 this['Lua']['eval'] = this['Lua'].eval;
