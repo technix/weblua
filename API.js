@@ -30,7 +30,7 @@ this['Lua'] = {
         this.isInitialized = true;
     },
     destroy: function() {
-        if (this.isInitialized) throw new Error('Lua is not initialized');
+        if (!this.isInitialized) throw new Error('Lua is not initialized');
         lua_close(this.state);
         this.isInitialized = false;
     },
