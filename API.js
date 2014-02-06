@@ -27,7 +27,6 @@ this['Lua'] = {
                 run();
                 this.isRun = true;
         }
-
         this.state = _luaL_newstate();
         _luaL_openlibs(this.state);
         for (var key in this.preallocated_strings) {
@@ -38,6 +37,11 @@ this['Lua'] = {
     destroy: function() {
         if (!this.isInitialized) throw new Error('Lua is not initialized');
         _lua_close(this.state);
+
+        for (var i = 0; i < Runtime.functionPointers.length; i++) {
+            Runtime.functionPointers[i] = null;
+        }
+
         this.isInitialized = false;
     },
     require_initialization: function(){
