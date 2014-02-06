@@ -25,7 +25,7 @@ this['Lua'] = {
 
         if (!this.isRun) {
                 run();
-                isRun = true;
+                this.isRun = true;
         }
 
         this.state = _luaL_newstate();
