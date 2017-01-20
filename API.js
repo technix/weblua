@@ -18,18 +18,10 @@ this['Lua'] = {
         '__index': null,
     },
     js_string_to_lua: function(str) {
-        ret = intArrayFromString(str);
-        return ret;
+        return intArrayFromString(str);
     },
     lua_string_to_js: function(int8_array) {
-        return String.fromCodePoint.apply(String, int8_array);
-        /*
-        var buffer = [];
-        for (var i = 0; i < int8_array.length; i++) {
-            buffer.push(String.fromCharCode(int8_array[i]));
-        }
-        return buffer.join('');
-        */
+        return decodeURIComponent(escape(intArrayToString(int8_array)));
     },
     set_js_string_to_lua: function(f) {
         this.js_string_to_lua = f;
