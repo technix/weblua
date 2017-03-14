@@ -21,6 +21,7 @@ var Lua = {
     isInitialized: false,
     state: null,
     tmp_id: 0,
+    errorHandlerCallback: null,
     default_source_name: 'stdin',
     preallocated_strings: {
         '__handle': null,
@@ -407,6 +408,9 @@ var Lua = {
     },
     stderr: function luaStderr(str) {
         console.log('stderr: ' + str);
+        if (this.errorHandlerCallback) {
+            this.errorHandlerCallback(str);
+        }
     },
     report_error: function reportError(defaultMessage) {
         if (this.isInitialized) {
@@ -417,6 +421,9 @@ var Lua = {
             this.stderr(defaultMessage);
         }
         _lua_settop(this.state, 0);
+    },
+    set_error_callback: function setErrorCallback(cb) {
+        this.errorHandlerCallback = cb;
     }
 };
 
@@ -434,6 +441,7 @@ window['Lua']['inject'] = Lua.inject; // eslint-disable-line dot-notation
 window['Lua']['cache'] = Lua.cache; // eslint-disable-line dot-notation
 window['Lua']['set_js_string_to_lua'] = Lua.set_js_string_to_lua; // eslint-disable-line dot-notation
 window['Lua']['set_lua_string_to_js'] = Lua.set_lua_string_to_js; // eslint-disable-line dot-notation
+window['Lua']['set_error_callback'] = Lua.set_error_callback; // eslint-disable-line dot-notation
 
 window['Lua']['cache']['items'] = {}; // eslint-disable-line dot-notation
 window['Lua']['cache']['clear'] = function luaClearCache(evalstring) { // eslint-disable-line dot-notation
