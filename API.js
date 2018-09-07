@@ -1,11 +1,11 @@
-/* global Lua,allocate,run,Runtime,_luaL_newstate,_luaL_openlibs,_luaL_loadbufferx,
+/* global Lua,allocate,run,_luaL_newstate,_luaL_openlibs,_luaL_loadbufferx,
 _free,_lua_close,_lua_pcallk,_lua_setmetatable,_lua_setglobal,_lua_type,_lua_typename,
 Pointer_stringify,_lua_topointer,_lua_toboolean,_lua_tonumberx,_lua_rawlen,
 _lua_tolstring,_lua_pushstring,_lua_rawget,_luaL_getmetafield,_lua_pushnil,
 _lua_next,_lua_iscfunction,_lua_pushvalue,_lua_gettop,_lua_getglobal,
 _lua_settop,_lua_pushboolean,_lua_pushnumber,_lua_pushcclosure,
 _lua_createtable,_lua_rawset,
-intArrayFromString,intArrayToString,HEAPU8,FUNCTION_TABLE */
+intArrayFromString,intArrayToString,HEAPU8 */
 
 // This file is appended to the end of build/liblua.js
 
@@ -15,6 +15,8 @@ intArrayFromString,intArrayToString,HEAPU8,FUNCTION_TABLE */
 // Based on https://github.com/replit/jsrepl/blob/master/extern/lua/entry_point.js
 //
 // ============================================================================
+
+var FUNCTION_TABLE = [];
 
 var Lua = {
     isRun: false,
@@ -62,8 +64,8 @@ var Lua = {
         if (!this.isInitialized) throw new Error('Lua is not initialized');
         _lua_close(this.state);
 
-        for (var i = 0; i < Runtime.functionPointers.length; i++) {
-            Runtime.functionPointers[i] = null;
+        for (var i = 0; i < functionPointers.length; i++) {
+            functionPointers[i] = null;
         }
 
         this.isInitialized = false;
@@ -316,7 +318,8 @@ var Lua = {
                 return result.length;
             };
             wrapper.unwrapped = object;
-            var pointer = Runtime.addFunction(wrapper);
+            var pointer = addFunction(wrapper);
+            FUNCTION_TABLE[pointer] = wrapper;
             _lua_pushcclosure(this.state, pointer, 0);
             return 1;
         case 'object':
