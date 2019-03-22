@@ -57,10 +57,10 @@ ifdef EMSCRIPTEN
    '_lua_rawset', '_lua_setglobal', '_lua_setmetatable', '_lua_settop', '_lua_toboolean', \
    '_lua_tolstring', '_lua_tonumberx', '_lua_topointer', '_lua_type', '_lua_typename', \
    '_luaL_loadbufferx', '_luaL_getmetafield']" --memory-init-file 0 \
-   -s TOTAL_MEMORY=134217728 -s ALLOW_MEMORY_GROWTH=0 -s ASM_JS=1 \
+   -s TOTAL_MEMORY=134217728 -s ALLOW_MEMORY_GROWTH=1 -s ASM_JS=1 \
    -s WASM=0 -s RESERVED_FUNCTION_POINTERS=128 \
-   -s WARN_ON_UNDEFINED_SYMBOLS=1 -s INVOKE_RUN=0 -s AUTORUN=0 \
-   -s NO_FILESYSTEM=1 \
+   -s WARN_ON_UNDEFINED_SYMBOLS=1 -s INVOKE_RUN=0 \
+   -s NO_FILESYSTEM=1 -s ENVIRONMENT=web \
    --post-js ../API.js
 else
   EMLUA_SHELL_T = emlua_shell
